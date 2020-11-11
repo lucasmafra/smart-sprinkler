@@ -1,2 +1,3 @@
 ghdl -a *.vhd
-ghdl -r temporizador_tb --vcd=temporizador_tb.vcd
+ghdl -e $1
+ghdl -r $1 --vcd=$1.vcd
