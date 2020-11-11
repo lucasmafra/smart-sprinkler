@@ -10,7 +10,8 @@ entity temporizador is
   port (
     i_clock: in std_logic;
     i_reset: in std_logic;
-    o_temporizador: out std_logic
+    o_temporizador: out std_logic;
+    o_fim_temporizador: out std_logic
   );
 end entity;
 
@@ -28,9 +29,15 @@ begin
       else IQ <= IQ + 1; 
       end if;
     end if;
+
+    if IQ=N-1 then o_fim_temporizador <= '1'; 
+    else o_fim_temporizador <= '0'; 
+    end if;
     
     if IQ < M and i_reset = '0' then o_temporizador <= '1'; 
     else o_temporizador <= '0'; 
     end if;
+
+
   end process;
 end arch;

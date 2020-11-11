@@ -13,13 +13,15 @@ architecture tb of temporizador_tb is
     port (
       i_clock: in std_logic;
       i_reset: in std_logic;
-      o_temporizador: out std_logic
+      o_temporizador: out std_logic;
+      o_fim_temporizador: out std_logic
     );
   end component;
 
   signal clk_in: std_logic := '0';
   signal rst_in: std_logic := '0';
   signal temporizador_out: std_logic;
+  signal fim_temporizador_out: std_logic;
   signal simulando: std_logic := '0';    -- delimita o tempo de geração do clock
   constant periodoClock : time := 20 ns;  --  clock de 50MHz
   
@@ -36,7 +38,8 @@ begin
     port map (
       i_clock => clk_in,
       i_reset => rst_in,
-      o_temporizador => temporizador_out
+      o_temporizador => temporizador_out,
+      o_fim_temporizador => fim_temporizador_out
     );
 
   stimulus: process is
@@ -52,41 +55,51 @@ begin
     wait for periodoClock;
 
     assert temporizador_out = '1' report "clock #1 - temporizador = 1";
+    assert fim_temporizador_out = '0' report "clock #1 - fim_temporizador = 0";
 
     wait for periodoClock/2;
     assert temporizador_out = '1' report "clock #2 - temporizador = 1";
+    assert fim_temporizador_out = '0' report "clock #2 - fim_temporizador = 0";
     wait for periodoClock/2;
 
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #3 - temporizador = 0";
+    assert fim_temporizador_out = '0' report "clock #3 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #4 - temporizador = 0";
+    assert fim_temporizador_out = '0' report "clock #4 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #5 - temporizador = 0";
+    assert fim_temporizador_out = '1' report "clock #5 - fim_temporizador = 1";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '1' report "clock #6 - temporizador = 1";
+    assert fim_temporizador_out = '0' report "clock #6 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '1' report "clock #7 - temporizador = 1";
+    assert fim_temporizador_out = '0' report "clock #7 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #8 - temporizador = 0";
+    assert fim_temporizador_out = '0' report "clock #8 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #9 - temporizador = 0";
+    assert fim_temporizador_out = '0' report "clock #9 - fim_temporizador = 0";
     wait for periodoClock/2;
     
     wait for periodoClock/2;
     assert temporizador_out = '0' report "clock #10 - temporizador = 0";
+    assert fim_temporizador_out = '1' report "clock #10 - fim_temporizador = 1";
     wait for periodoClock/2;
     
     assert false report "Fim da simulacao" severity note;
