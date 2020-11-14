@@ -7,6 +7,9 @@ end entity;
 
 architecture tb of controle_rega_tb is
   component controle_rega
+    generic (
+      constant velocidade_simulacao: integer := 1
+    );
     port (
       i_clock: in std_logic;
       i_reset: in std_logic;
@@ -30,6 +33,9 @@ begin
   clk_in <= (simulando and (not clk_in)) after periodoClock/2;
     
   dut: controle_rega
+    generic map (
+      velocidade_simulacao => 1000
+    )
     port map (
       i_clock => clk_in,
       i_reset => rst_in,
@@ -49,33 +55,33 @@ begin
     assert vaso_out = "00" report "reset - vaso_out = 00";    
     rst_in <= '0';
 
-    wait for 100 ns;
+    wait for 1 ms;
 
     ligar_in <= '1';
-    wait for 100 ns;
+    wait for 1 ms;
     ligar_in <= '0';
 
-    wait for 100 ns;
+    wait for 1 ms;
     assert abre_valvula_out = '1' report "Abre valvula pela primeira vez";
     assert vaso_out = "00" report "Vaso inicialmente eh 00";    
 
-    wait for 500 ns;
+    wait for 1.1 ms;
     assert abre_valvula_out = '0' report "Fechou valvula pela primeira vez";
     assert vaso_out = "00" report "Vaso continua sendo o 00";
 
-    wait for 600 ns;
+    wait for 3 ms;
     assert vaso_out = "01" report "Alterna para o vaso 01";    
     assert abre_valvula_out = '1' report "Abre valvula pela segunda vez";
 
-    wait for 500 ns;
+    wait for 2.1 ms;
     assert abre_valvula_out = '0' report "Fechou valvula pela segunda vez";
     assert vaso_out = "01" report "Vaso continua sendo o 01";
 
-    wait for 600 ns;
+    wait for 3 ms;
     assert vaso_out = "00" report "Retorna para o vaso 00";    
     assert abre_valvula_out = '1' report "Abre valvula pela terceira vez";
 
-    wait for 500 ns;
+    wait for 2 ms;
     assert abre_valvula_out = '0' report "Fechou valvula pela terceira vez";
     
     assert false report "Fim da simulacao" severity note;

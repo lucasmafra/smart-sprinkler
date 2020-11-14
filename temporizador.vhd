@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 
 entity temporizador is
   generic (
-    constant M: integer := 500000000;  -- duracao do sinal em '1'
-    constant N: integer := 1000000000 -- periodo total
+    constant M: integer;  -- duracao do sinal em '1'
+    constant N: integer -- periodo total
   );
   port (
     i_clock: in std_logic;

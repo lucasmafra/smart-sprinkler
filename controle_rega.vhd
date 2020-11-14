@@ -3,6 +3,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity controle_rega is
+  generic (
+    constant velocidade_simulacao: integer := 1
+  );
   port (
     i_clock: in std_logic;
     i_reset: in std_logic;
@@ -15,8 +18,8 @@ end entity;
 architecture arch of controle_rega is
   component temporizador is
     generic (
-      constant M: integer := 500000000;  -- duracao do sinal em '1'
-      constant N: integer := 1000000000 -- periodo total
+      constant M: integer;  -- duracao do sinal em '1'
+      constant N: integer -- periodo total
     );
     port (
       i_clock: in std_logic;
@@ -62,8 +65,8 @@ begin
 
   temporizador_0: temporizador
     generic map (
-     M => 20,
-     N => 50
+     M => 100000000 / velocidade_simulacao, -- 2s
+     N => 250000000 / velocidade_simulacao -- 5s
     )
     port map (
       i_clock => i_clock,
