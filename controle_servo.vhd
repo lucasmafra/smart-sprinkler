@@ -11,8 +11,8 @@ use ieee.numeric_std.all;
 
 entity controle_servo is
   generic (
-    constant velocidade_simulacao: integer := 1;
-  )
+    constant velocidade_simulacao: integer := 1
+  );
   port (
     i_clock    : in  std_logic;
     i_reset    : in  std_logic;
@@ -63,7 +63,7 @@ begin
   begin
     case i_posicao is
       when "00" =>    s_i_posicao <= 50000 / velocidade_simulacao;  -- pulso de  1 ms
-      when "01" =>    s_i_posicao <=    66500;  -- pulso de 1.33 ms
+      when "01" =>    s_i_posicao <=    100000 / velocidade_simulacao;  -- pulso de 2 ms
       when "10" =>    s_i_posicao <=    83500 / velocidade_simulacao;  -- pulso de 1.67 ms
       when others =>    s_i_posicao <=   100000 / velocidade_simulacao;  -- pulso de 2ms
     end case;
