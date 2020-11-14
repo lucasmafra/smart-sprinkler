@@ -39,6 +39,7 @@ architecture arch of controle_rega is
       i_girou_servomotor: in std_logic;
       o_alternar_vaso: out std_logic;
       o_abre_valvula: out std_logic;
+      o_conta_espera_giro_servomotor: out std_logic;
       db_estado: out std_logic_vector(3 downto 0)
     ); 
   end component;
@@ -59,6 +60,8 @@ architecture arch of controle_rega is
   signal s_reset_temporizador: std_logic;
   signal s_fim_temporizador: std_logic;
   signal s_alternar_vaso: std_logic;
+  signal s_conta_espera_giro_servomotor: std_logic;
+  signal s_girou_servomotor: std_logic;
   
 begin
   s_reset_temporizador <= i_reset or i_ligar;
@@ -82,9 +85,10 @@ begin
       i_ligar => i_ligar,
       i_valor_temporizador => s_temporizador,
       i_fim_temporizador => s_fim_temporizador,
-      i_girou_servomotor => '1',
+      i_girou_servomotor => s_girou_servomotor,
       o_alternar_vaso => s_alternar_vaso,
       o_abre_valvula => o_abre_valvula,
+      o_conta_espera_giro_servomotor => s_conta_espera_giro_servomotor,
       db_estado => open
     );
 
@@ -99,5 +103,18 @@ begin
       conta => s_alternar_vaso,
       Q => o_vaso,
       fim => open
+    );
+
+  contador_espera_giro_servomotor_0: contador_m
+    generic map (
+      M => 25000000 / velocidade_simulacao, -- espera 500ms para servomotor girar,
+      N => 32
+    )
+    port map (
+      clock => i_clock,
+      zera => i_reset,
+      conta => s_conta_espera_giro_servomotor,
+      Q => open,
+      fim => s_girou_servomotor
     );
 end arch;

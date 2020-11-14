@@ -12,6 +12,7 @@ entity controle_rega_uc is
     i_girou_servomotor: in std_logic;
     o_alternar_vaso: out std_logic;
     o_abre_valvula: out std_logic;
+    o_conta_espera_giro_servomotor: out std_logic;
     db_estado: out std_logic_vector(3 downto 0)
   );
 end;
@@ -75,6 +76,9 @@ begin
 		
   with Eatual select
     o_abre_valvula <= '1' when rega, '0' when others;
+
+  with Eatual select
+    o_conta_espera_giro_servomotor <= '1' when espera_giro_servomotor, '0' when others;
 
   with Eatual select
     db_estado <=

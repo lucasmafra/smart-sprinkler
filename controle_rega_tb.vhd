@@ -71,14 +71,21 @@ begin
 
     wait for 3 ms;
     assert vaso_out = "01" report "Alterna para o vaso 01";    
+    assert abre_valvula_out = '0' report "Espera servomotor girar antes de abrir valvula pela segunda vez";
+    
+    wait for 0.5 ms;
     assert abre_valvula_out = '1' report "Abre valvula pela segunda vez";
 
     wait for 2.1 ms;
     assert abre_valvula_out = '0' report "Fechou valvula pela segunda vez";
     assert vaso_out = "01" report "Vaso continua sendo o 01";
 
-    wait for 3 ms;
-    assert vaso_out = "00" report "Retorna para o vaso 00";    
+    wait for 2.5 ms;
+    assert vaso_out = "00" report "Retorna para o vaso 00";
+    assert abre_valvula_out = '0' report "Espera servomotor girar antes de abrir valvula pela terceira vez";
+
+
+    wait for 0.5 ms;
     assert abre_valvula_out = '1' report "Abre valvula pela terceira vez";
 
     wait for 2 ms;
