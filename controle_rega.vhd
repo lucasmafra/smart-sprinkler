@@ -6,6 +6,7 @@ entity controle_rega is
   port (
     i_clock: in std_logic;
     i_reset: in std_logic;
+    i_ligar: in std_logic;
     o_abre_valvula: out std_logic;
     o_vaso: out std_logic_vector
   );
@@ -29,6 +30,7 @@ architecture arch of controle_rega is
     port (
       i_clock: in std_logic;
       i_reset: in std_logic;
+      i_ligar: in std_logic;
       i_valor_temporizador: in std_logic;
       i_fim_temporizador: in std_logic;
       i_girou_servomotor: in std_logic;
@@ -51,10 +53,13 @@ architecture arch of controle_rega is
   end component;
 
   signal s_temporizador: std_logic;
+  signal s_reset_temporizador: std_logic;
   signal s_fim_temporizador: std_logic;
   signal s_alternar_vaso: std_logic;
   
 begin
+  s_reset_temporizador <= i_reset or i_ligar;
+
   temporizador_0: temporizador
     generic map (
      M => 20,
@@ -62,7 +67,7 @@ begin
     )
     port map (
       i_clock => i_clock,
-      i_reset => i_reset,
+      i_reset => s_reset_temporizador,
       o_temporizador => s_temporizador,
       o_fim_temporizador => s_fim_temporizador
     );
@@ -71,6 +76,7 @@ begin
     port map (
       i_clock => i_clock,
       i_reset => i_reset,
+      i_ligar => i_ligar,
       i_valor_temporizador => s_temporizador,
       i_fim_temporizador => s_fim_temporizador,
       i_girou_servomotor => '1',

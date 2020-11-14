@@ -6,6 +6,7 @@ entity controle_rega_uc is
   port (
     i_clock: in std_logic;
     i_reset: in std_logic;
+    i_ligar: in std_logic;
     i_valor_temporizador: in std_logic;
     i_fim_temporizador: in std_logic;
     i_girou_servomotor: in std_logic;
@@ -35,7 +36,11 @@ begin
   process(i_fim_temporizador, i_valor_temporizador, i_girou_servomotor, Eatual)
   begin
     case Eatual is
-      when inicial => Eprox <= repouso;
+      when inicial => if i_ligar = '1' then
+                        Eprox <= repouso;
+                      else
+                        Eprox <= inicial;
+                      end if;
 
       when repouso => if i_valor_temporizador = '1' then
                         Eprox <= rega;
