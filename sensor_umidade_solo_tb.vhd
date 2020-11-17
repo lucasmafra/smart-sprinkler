@@ -65,6 +65,16 @@ begin
     assert pronto_out = '0' report "reset - o_pronto = 0";    
     rst_in <= '0';
 
+    wait for periodoClock;
+    medir_in <= '1';
+    wait for periodoClock;
+
+    assert trigger_out = '1' report "should send trigger";
+    wait for 5 us;
+    assert trigger_out = '1' report "trigger_out should last for 10us";
+    wait for 5 us;
+    assert trigger_out = '0' report "trigger_out should only last for 10us";
+      
     assert false report "Fim da simulacao" severity note;
     simulando <= '0';
     wait; -- fim da simulação
