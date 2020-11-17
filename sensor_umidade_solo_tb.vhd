@@ -7,9 +7,6 @@ end entity;
 
 architecture tb of sensor_umidade_solo_tb is
   component sensor_umidade_solo
-    generic (
-      constant velocidade_simulacao: integer := 1
-    );
     port(
       i_clock: in std_logic;
       i_reset: in std_logic;
@@ -39,9 +36,6 @@ begin
   clk_in <= (simulando and (not clk_in)) after periodoClock/2;
     
   dut: sensor_umidade_solo
-    generic map (
-      velocidade_simulacao => 1000
-    )
     port map (
       i_clock => clk_in,
       i_reset => rst_in,

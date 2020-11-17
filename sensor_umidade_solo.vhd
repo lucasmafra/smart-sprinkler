@@ -3,9 +3,6 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity sensor_umidade_solo is
-  generic (
-    constant velocidade_simulacao: integer := 1
-  );
   port(
     i_clock: in std_logic;
     i_reset: in std_logic;
