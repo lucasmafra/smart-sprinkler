@@ -21,7 +21,7 @@ end entity;
 
 
 architecture arch of sensor_umidade_solo is
- signal s_fim_gera_trigger, s_conta_echo, s_zera, s_trigger, s_zera_medida, s_conta_echo_modulado: std_logic;
+ signal s_fim_gera_trigger, s_conta_echo, s_zera, s_trigger, s_zera_medida: std_logic;
 
  component sensor_umidade_solo_uc is 
   port ( clock, reset, medir, echo, fim_gera_trigger	: in std_logic;
@@ -52,9 +52,7 @@ component contador_m
 begin
 
 	 U1_sensor_umidade_solo_uc: sensor_umidade_solo_uc port map (i_clock, i_reset, i_medir, i_echo, s_fim_gera_trigger, s_trigger, s_conta_echo, o_pronto, s_zera, s_zera_medida, db_estado);
-	 U2_sensor_umidade_solo_fd: sensor_umidade_solo_fd port map (i_clock, i_reset, s_trigger, s_conta_echo_modulado, s_zera, s_zera_medida, s_fim_gera_trigger, o_medida);	 	
-	 U3: contador_m generic map (M => 2941, N => 12) port map (i_clock, s_zera, s_conta_echo, open, s_conta_echo_modulado);
-	
+	 U2_sensor_umidade_solo_fd: sensor_umidade_solo_fd port map (i_clock, i_reset, s_trigger, s_conta_echo, s_zera, s_zera_medida, s_fim_gera_trigger, o_medida);	 		
 	 o_trigger <= s_trigger;
 	 db_medir <= i_medir;
 	 

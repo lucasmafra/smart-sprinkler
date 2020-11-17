@@ -74,6 +74,15 @@ begin
     assert trigger_out = '1' report "trigger_out should last for 10us";
     wait for 5 us;
     assert trigger_out = '0' report "trigger_out should only last for 10us";
+
+    echo_in <= '1';
+    wait for 122 us;
+    echo_in <= '0';
+
+    wait for periodoClock;
+
+    assert medida_out = "0110000100000000" report "should measure 61% for pulse of 122us";
+    assert pronto_out = '1' report "pronto_out should be 1 when measurement is ready";
       
     assert false report "Fim da simulacao" severity note;
     simulando <= '0';
