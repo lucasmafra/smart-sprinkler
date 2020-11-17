@@ -93,6 +93,17 @@ architecture arch of controle_rega is
     );
   end component;
 
+  component comparador_m is
+    generic (
+      constant N: integer -- numero de bits dos sinais a serem comparados
+    );
+    port (
+      a: in std_logic_vector(N-1 downto 0);
+      b: in std_logic_vector(N-1 downto 0);
+      a_less_than_b: out std_logic
+    );
+  end component;
+
 
   signal s_temporizador: std_logic;
   signal s_reset_temporizador: std_logic;
@@ -114,6 +125,7 @@ architecture arch of controle_rega is
   signal s_medir: std_logic;
   signal s_umidade_solo: std_logic_vector(15 downto 0);
   signal s_vaso: std_logic_vector(1 downto 0);
+  signal s_abaixo_threshold: std_logic;
 
 begin
   s_reset_temporizador <= i_reset or i_ligar;
@@ -155,7 +167,7 @@ begin
       i_fim_repouso => s_fim_repouso,
       i_girou_servomotor => s_girou_servomotor,
       i_medida_pronta => s_medida_pronta,
-      i_abaixo_threshold => '0',
+      i_abaixo_threshold => s_abaixo_threshold,
       o_medir => s_medir,
       o_repousando => s_repousando,
       o_alternar_vaso => s_alternar_vaso,
@@ -178,6 +190,16 @@ begin
       o_medida => s_umidade_solo
     );
 
+
+  comparador_threshold: comparador_m
+    generic map(
+      N => 16
+    )
+    port map (
+      a => s_umidade_solo,
+      b => "1000000000000000", -- threshold hardcoded in 80%
+      a_less_than_b => s_abaixo_threshold
+    );
     
   contador_vaso_0: contador_m
     generic map (

@@ -49,7 +49,9 @@ begin
 
       when trigga_medida => Eprox <= espera_medida;
 
-      when espera_medida => if i_abaixo_threshold = '1' then
+      when espera_medida => if i_medida_pronta = '0' then
+                              Eprox <= espera_medida;
+                            elsif i_abaixo_threshold = '1' then
                               Eprox <= rega;
                             else
                               Eprox <= repouso;
@@ -61,7 +63,9 @@ begin
                      Eprox <= rega;
                    end if;
                             
-      when repouso => if i_abaixo_threshold = '1' then
+      when repouso => if i_fim_repouso = '0' then
+                        Eprox <= repouso;
+                      elsif i_abaixo_threshold = '1' then
                         Eprox <= trigga_medida;
                       else
                         Eprox <= alterna_vaso;
@@ -72,7 +76,7 @@ begin
       when alterna_vaso => Eprox <= espera_giro_servomotor;
 
       when espera_giro_servomotor => if i_girou_servomotor = '1' then
-                                       Eprox <= repouso;
+                                       Eprox <= trigga_medida;
                                      else
                                        Eprox <= espera_giro_servomotor;
                                      end if;

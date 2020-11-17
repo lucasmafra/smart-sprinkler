@@ -67,7 +67,7 @@ begin
     assert vaso_out = "00" report "reset - vaso_out = 00";    
     rst_in <= '0';
 
-    wait for 1 ms;
+    wait for periodoClock;
 
     ligar_in <= '1';
     wait for periodoClock;
@@ -76,6 +76,55 @@ begin
     wait for periodoClock;
     assert trigger_sensor_0_out = '1' report "should trigger sensor 0";
     assert trigger_sensor_1_out = '0' report "should not trigger sensor 1";
+    wait for 10 us; -- espera fim do sensor trigger
+
+    echo_sensor_0_in <= '1';
+    wait for 150 us; -- 75% de umidade
+    echo_sensor_0_in <= '0';
+
+    wait for 2*periodoClock;
+    assert abre_valvula_out = '1' report "abriu valvula";
+    assert vaso_out = "00" report "deve regar vaso 00";
+
+    wait for 1 ms;
+    assert abre_valvula_out = '0' report "fechou valvula";
+    assert vaso_out = "00" report "ainda está no vaso 00";
+
+    wait for 0.9 ms;
+    assert abre_valvula_out = '0' report "valvula fechada enquanto repousa";
+    assert trigger_sensor_0_out = '0' report "nao trigga sensor 0 enquanto repousa";
+    assert trigger_sensor_1_out = '0' report "nao trigga sensor 1 enquanto repousa";
+
+    wait for 0.1 ms;
+    wait for periodoClock;
+    assert trigger_sensor_0_out = '1' report "mede sensor 0 novamente";
+    wait for 10 us; -- espera fim do sensor trigger
+
+    echo_sensor_0_in <= '1';
+    wait for 190 us; -- 95% de umidade
+    echo_sensor_0_in <= '0';
+
+    wait for 2*periodoClock;
+    assert abre_valvula_out = '0' report "nao deve mais regar vaso 00";
+
+    wait for 1.5 ms; -- repouso + giro servo motor
+
+    wait for 2*periodoClock;
+    
+    assert vaso_out = "01" report "girou servomotor para o vaso 01";
+    assert trigger_sensor_0_out = '0' report "should not trigger sensor 0";
+    assert trigger_sensor_1_out = '1' report "should trigger sensor 1";
+    wait for 10 us; -- espera fim do sensor trigger
+
+    echo_sensor_1_in <= '1';
+    wait for 180 us; -- 90% de umidade
+    echo_sensor_1_in <= '0';
+
+    wait for 2*periodoClock;
+    assert abre_valvula_out = '0' report "nao deve regar vaso 01";
+
+    wait for 1.5 ms; -- repouso + giro servo motor
+    assert vaso_out = "00" report "girou servomotor para o vaso 00";
 
     assert false report "Fim da simulacao" severity note;
     simulando <= '0';
