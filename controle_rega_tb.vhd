@@ -14,16 +14,24 @@ architecture tb of controle_rega_tb is
       i_clock: in std_logic;
       i_reset: in std_logic;
       i_ligar: in std_logic;
+      i_echo_sensor_0: in std_logic;
+      i_echo_sensor_1: in std_logic;
       o_abre_valvula: out std_logic;
-      o_vaso: out std_logic_vector
+      o_vaso: out std_logic_vector;
+      o_trigger_sensor_0: out std_logic;
+      o_trigger_sensor_1: out std_logic
     );    
   end component;
 
   signal clk_in: std_logic := '0';
   signal rst_in: std_logic := '0';
   signal ligar_in: std_logic := '0';
+  signal echo_sensor_0_in: std_logic := '0';
+  signal echo_sensor_1_in: std_logic := '0';
   signal abre_valvula_out: std_logic;
   signal vaso_out: std_logic_vector(1 downto 0);
+  signal trigger_sensor_0_out: std_logic;
+  signal trigger_sensor_1_out: std_logic;
   signal simulando: std_logic := '0';    -- delimita o tempo de geração do clock
   constant periodoClock : time := 20 ns;  --  clock de 50MHz
   
@@ -40,8 +48,12 @@ begin
       i_clock => clk_in,
       i_reset => rst_in,
       i_ligar => ligar_in,
+      i_echo_sensor_0 => echo_sensor_0_in,
+      i_echo_sensor_1 => echo_sensor_1_in,
       o_abre_valvula => abre_valvula_out,
-      o_vaso => vaso_out
+      o_vaso => vaso_out,
+      o_trigger_sensor_0 => trigger_sensor_0_out,
+      o_trigger_sensor_1 => trigger_sensor_1_out
     );
 
   stimulus: process is
@@ -58,39 +70,13 @@ begin
     wait for 1 ms;
 
     ligar_in <= '1';
-    wait for 1 ms;
+    wait for periodoClock;
     ligar_in <= '0';
 
-    wait for 1 ms;
-    assert abre_valvula_out = '1' report "Abre valvula pela primeira vez";
-    assert vaso_out = "00" report "Vaso inicialmente eh 00";    
+    wait for periodoClock;
+    assert trigger_sensor_0_out = '1' report "should trigger sensor 0";
+    assert trigger_sensor_1_out = '0' report "should not trigger sensor 1";
 
-    wait for 1.1 ms;
-    assert abre_valvula_out = '0' report "Fechou valvula pela primeira vez";
-    assert vaso_out = "00" report "Vaso continua sendo o 00";
-
-    wait for 3 ms;
-    assert vaso_out = "01" report "Alterna para o vaso 01";    
-    assert abre_valvula_out = '0' report "Espera servomotor girar antes de abrir valvula pela segunda vez";
-    
-    wait for 0.5 ms;
-    assert abre_valvula_out = '1' report "Abre valvula pela segunda vez";
-
-    wait for 2.1 ms;
-    assert abre_valvula_out = '0' report "Fechou valvula pela segunda vez";
-    assert vaso_out = "01" report "Vaso continua sendo o 01";
-
-    wait for 2.5 ms;
-    assert vaso_out = "00" report "Retorna para o vaso 00";
-    assert abre_valvula_out = '0' report "Espera servomotor girar antes de abrir valvula pela terceira vez";
-
-
-    wait for 0.5 ms;
-    assert abre_valvula_out = '1' report "Abre valvula pela terceira vez";
-
-    wait for 2 ms;
-    assert abre_valvula_out = '0' report "Fechou valvula pela terceira vez";
-    
     assert false report "Fim da simulacao" severity note;
     simulando <= '0';
     wait; -- fim da simulação

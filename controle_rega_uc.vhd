@@ -13,7 +13,7 @@ entity controle_rega_uc is
     i_medida_pronta: in std_logic;
     i_abaixo_threshold: in std_logic;
     o_medir: out std_logic;
-    o_repousando: std_logic;
+    o_repousando: out std_logic;
     o_alternar_vaso: out std_logic;
     o_abre_valvula: out std_logic;
     o_conta_espera_giro_servomotor: out std_logic;
@@ -38,7 +38,7 @@ begin
       end if;
   end process;
 
-  process(i_fim_temporizador, i_valor_temporizador, i_girou_servomotor, Eatual)
+  process(i_ligar, i_fim_rega, i_fim_repouso, i_medida_pronta, i_abaixo_threshold, i_girou_servomotor, Eatual)
   begin
     case Eatual is
       when inicial => if i_ligar = '1' then
@@ -53,6 +53,7 @@ begin
                               Eprox <= rega;
                             else
                               Eprox <= repouso;
+                            end if;
 
       when rega => if i_fim_rega = '1' then
                      Eprox <= repouso;
