@@ -13,7 +13,7 @@ entity controle_rega is
     i_echo_sensor_0: in std_logic;
     i_echo_sensor_1: in std_logic;
     o_abre_valvula: out std_logic;
-    o_vaso: out std_logic_vector;
+    o_vaso: out std_logic_vector(1 downto 0);
     o_trigger_sensor_0: out std_logic;
     o_trigger_sensor_1: out std_logic
   );
