@@ -68,6 +68,8 @@ architecture arch of controle_rega is
   signal s_girou_servomotor: std_logic;
   signal s_abre_valvula: std_logic;
   signal s_fim_rega: std_logic;
+  signal s_fim_repouso: std_logic;
+  signal s_repousando: std_logic;
   
 begin
   s_reset_temporizador <= i_reset or i_ligar;
@@ -91,12 +93,12 @@ begin
       i_reset => i_reset,
       i_ligar => i_ligar,
       i_fim_rega => s_fim_rega,
-      i_fim_repouso =>
+      i_fim_repouso => s_fim_repouso,
       i_girou_servomotor => s_girou_servomotor,
       i_medida_pronta =>
       i_abaixo_threshold =>
       o_medir =>
-      o_repousando =>
+      o_repousando => s_repousando,
       o_alternar_vaso => s_alternar_vaso,
       o_abre_valvula => s_abre_valvula,
       o_conta_espera_giro_servomotor => s_conta_espera_giro_servomotor,
@@ -127,6 +129,19 @@ begin
       conta => s_abre_valvula,
       Q => open,
       fim => s_fim_rega
+    );
+
+  contador_repouso_0: contador_m
+    generic map (
+      M => 50000000 / velocidade_simulacao, -- repousa por 1s,
+      N => 32
+    )
+    port map (
+      clock => i_clock,
+      zera => i_reset,
+      conta => s_repousando
+      Q => open,
+      fim => s_fim_repouso
     );
 
   contador_espera_giro_servomotor_0: contador_m
