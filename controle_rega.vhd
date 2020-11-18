@@ -20,19 +20,6 @@ entity controle_rega is
 end entity;
 
 architecture arch of controle_rega is
-  component temporizador is
-    generic (
-      constant M: integer;  -- duracao do sinal em '1'
-      constant N: integer -- periodo total
-    );
-    port (
-      i_clock: in std_logic;
-      i_reset: in std_logic;
-      o_temporizador: out std_logic;
-      o_fim_temporizador: out std_logic
-    );
-  end component;
-
   component controle_rega_uc is
     port (
       i_clock: in std_logic;

@@ -9,9 +9,13 @@ entity sistema_rega is
   port (
     i_clock: in std_logic;
     i_reset: in std_logic;
+    i_echo_sensor_0: in std_logic;
+    i_echo_sensor_1: in std_logic;
     i_ligar: in std_logic;
     o_abre_valvula: out std_logic;
-    o_pwm: out std_logic
+    o_pwm: out std_logic;
+    o_trigger_sensor_0: out std_logic;
+    o_trigger_sensor_1: out std_logic
   );
 end entity;
 
@@ -25,8 +29,12 @@ architecture arch of sistema_rega is
       i_clock: in std_logic;
       i_reset: in std_logic;
       i_ligar: in std_logic;
+      i_echo_sensor_0: in std_logic;
+      i_echo_sensor_1: in std_logic;
       o_abre_valvula: out std_logic;
-      o_vaso: out std_logic_vector
+      o_vaso: out std_logic_vector(1 downto 0);
+      o_trigger_sensor_0: out std_logic;
+      o_trigger_sensor_1: out std_logic
     );
   end component;
 
@@ -56,8 +64,12 @@ begin
       i_clock => i_clock,
       i_reset => i_reset,
       i_ligar => i_ligar,
+      i_echo_sensor_0 => i_echo_sensor_0,
+      i_echo_sensor_1 => i_echo_sensor_1,
       o_abre_valvula => o_abre_valvula,
-      o_vaso => s_vaso
+      o_vaso => s_vaso,
+      o_trigger_sensor_0 => o_trigger_sensor_0,
+      o_trigger_sensor_1 => o_trigger_sensor_1
     );
       
   controle_servo_0: controle_servo
