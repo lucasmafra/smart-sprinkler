@@ -28,7 +28,7 @@ begin
       if    carrega='1' then IQ <= dados;
       elsif desloca='1' then IQ <=  entrada_serial & IQ(N-1 downto 1);
       else                   IQ <= IQ;
-      end if;
+      end if;   
     end if;
     saida <= IQ; 
   end process;

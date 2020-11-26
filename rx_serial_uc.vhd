@@ -6,7 +6,7 @@ use ieee.std_logic_1164.all;
 
 entity rx_serial_uc is 
   port ( clock, reset, fim, tick, i_serial, i_recebe_dado: in std_logic;
-         zera, conta, desloca, pronto, o_tem_dado: out std_logic;			
+         zera, conta, desloca, pronto, o_tem_dado, o_final: out std_logic;			
 			db_estado: out std_logic_vector(3 downto 0)
 			);
 end;
@@ -49,18 +49,18 @@ begin
 								end if;
 
       when recepcao =>  if tick = '1' and fim = '0' then Eprox <= recepcao;
-								elsif fim='0' then Eprox <= espera;
-                           else            Eprox <= stopbit_1;
-                           end if;
+                        elsif fim='0' then Eprox <= espera;
+                        else            Eprox <= stopbit_1;
+                        end if;
 		
-		when stopbit_1 => 	Eprox <= stopbit_2;
-		
-		when stopbit_2 =>		Eprox <= espera_ler_dado;
-		
-		when espera_ler_dado =>  if i_recebe_dado = '1' and tick = '1' then Eprox <= final;
+      when stopbit_1 => 	Eprox <= stopbit_2;
+                                
+      when stopbit_2 =>		Eprox <= espera_ler_dado;
+                                
+      when espera_ler_dado =>  if i_recebe_dado = '1' and tick = '1' then Eprox <= final;
 								      
                                else            Eprox <= espera_ler_dado;
-										 end if;
+                               end if;
 
       when final =>        Eprox <= inicial;
 									
@@ -85,9 +85,12 @@ begin
 	
   with Eatual select
       o_tem_dado <= '1' when espera_ler_dado, '0' when others;
+
+  with Eatual select
+      o_final <= '1' when final, '0' when others;
 		
-			
-	with Eatual select
+  
+    with Eatual select
       db_estado <= 
 		"0000" when inicial,
 		"0001" when startbit,

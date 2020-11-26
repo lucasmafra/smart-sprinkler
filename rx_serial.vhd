@@ -11,7 +11,8 @@ entity rx_serial is
 		i_recebe_dado: in std_logic;
 		o_dado_recebido: out std_logic_vector (7 downto 0);
 		o_tem_dado: out std_logic;
-		o_pronto: out std_logic;	
+		o_pronto: out std_logic;
+                o_final: out std_logic;
 		db_recebe_dado: out std_logic;
 		db_dado_serial: out std_logic;
 		db_estado: out std_logic_vector(3 downto 0)
@@ -24,7 +25,7 @@ architecture arch_rx_serial of rx_serial is
 	 signal s_dado_recebido: std_logic_vector(7 downto 0);
      
     component rx_serial_uc port ( clock, reset, fim, tick, i_serial, i_recebe_dado: in std_logic;
-         zera, conta, desloca, pronto, o_tem_dado: out std_logic;			
+         zera, conta, desloca, pronto, o_tem_dado, o_final: out std_logic;			
 			db_estado: out std_logic_vector(3 downto 0)
 			);
     end component;
@@ -63,7 +64,7 @@ begin
 
     U1: rx_serial_uc port map (i_clock, s_reset, s_fim, s_tick, i_dado_serial,
 		                         i_recebe_dado,
-                               s_zera, s_conta, s_desloca, s_pronto_rx, s_tem_dado, db_estado);
+                               s_zera, s_conta, s_desloca, s_pronto_rx, s_tem_dado, o_final, db_estado);
 
     U2: rx_serial_fd port map (i_clock, s_reset, s_zera, s_conta, s_desloca, 
                                i_dado_serial, s_dado_recebido, s_fim);
@@ -79,6 +80,5 @@ begin
 	 
 	 db_recebe_dado <= i_recebe_dado;
 	 db_dado_serial <= i_dado_serial;
-	 
 	 
 end arch_rx_serial;
